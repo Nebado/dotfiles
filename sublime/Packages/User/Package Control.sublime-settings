@@ -1,0 +1,32 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"BracketHighlighter",
+		"LuaAutocomplete",
+		"MarkdownPreview",
+		"Package Control",
+		"Rust Enhanced",
+		"RustAutoComplete",
+		"SideBarEnhancements",
+		"SublimeLinter",
+		"SublimeLinter-annotations",
+		"SublimeLinter-contrib-elixirc",
+		"SublimeLinter-contrib-rustc",
+		"SublimeLinter-cppcheck",
+		"SublimeLinter-cpplint",
+		"SublimeLinter-csslint",
+		"SublimeLinter-flake8",
+		"SublimeLinter-html-tidy",
+		"SublimeLinter-json",
+		"SublimeLinter-jsxhint",
+		"SublimeLinter-lua",
+		"SublimeLinter-php",
+		"SublimeREPL",
+		"Theme - Soda",
+		"VIM Navigation"
+	]
+}
