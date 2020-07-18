@@ -1,0 +1,326 @@
+[colors]
+# background = ${xrdb:background}
+background = #16171A
+foreground = ${xrdb:color7}
+accent = #798BC7
+# text = #9baec8
+text = #AEB4C6
+suffix = ${xrdb:color8}
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+
+# /////////////////////////////////////
+[bar/top]
+# xrandr -q | grep " connected" | cut -d ' ' -f1
+#monitor = ${env:MONITOR:VGA-1}
+monitor = ${env:MONITOR:monitor-fallback}
+monitor-fallback = VGA-1
+#monitor-fallback = HDMI1
+#monitor-strict = false
+width = 100%
+height = 24
+offset-x = 0
+offset-y = 0
+fixed-center = true
+bottom = false
+#locale = ru_RU.UTF-8
+
+# wm-restack = i3
+# wm-restack = bspwm
+override-redirect = false
+enable-ipc = true
+# "polybar-msg cmd toggle" hide/show bar
+
+background = ${colors.background}
+foreground = ${colors.text}
+
+line-size = 0
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 5
+module-margin-right = 0
+
+font-0 = "ClearSansMedium:size=9:antialias=false;1"
+# Cat unicode: echo -e "\uF31A"
+font-1 = "Font Awesome 4 Free:style=Regular:pixelsize=8;1"
+font-2 = "Font Awesome 4 Free:style=Solid:pixelsize=8;1"
+font-3 = "Font Awesome 4 Brands:pixelsize=8;1"
+font-4 = "Hack Nerd Font Mono:pixelsize=8:antialias=false;1"
+
+
+modules-left = cpu memory title
+modules-center = i3
+modules-right = mpd alsa date xkeyboard power
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+# ##########################################
+[module/fs]
+type = internal/fs
+mount-0 = /
+mount-1 = /home
+mount-2 = /media/files
+interval = 100
+fixed-values = true
+spacing = 2
+format-mounted = <label-mounted>
+format-unmounted = <label-unmounted>
+label-mounted =  %used%
+label-mounted-foreground = ${colors.accent}
+label-unmounted = no mount
+label-unmounted-foreground = ${colors.red}
+
+
+
+
+[module/wtr]
+type = custom/script
+exec = ~/.config/polybar/wtr.sh
+format-foreground = ${colors.magenta}
+# format-padding = 1
+interval = 600
+label-font = 0
+
+
+
+[module/uparch]
+type = custom/script
+exec = ~/.config/polybar/uparch.sh
+interval = 600
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+click-left = "kitty --name Pacui -e pacui &"
+
+
+
+[module/ip]
+type = custom/script
+interval = 600
+format = "<label>"
+format-prefix = "ip: "
+format-prefix-foreground = ${colors.magenta}
+# format-padding = 1
+exec = echo "$(wget -qO- https://canihazip.com/s | sed -e 's/[^[:digit:]\|.]//g')"
+exec-if = ping -c 1 ya.ru
+
+
+
+[module/tor]
+type = custom/script
+exec = ~/.config/polybar/status tor
+interval = 6
+format = <label>
+# format-padding = 1
+click-left = "systemctl restart tor"
+click-right = "systemctl stop tor"
+
+
+
+[module/title]
+type = internal/xwindow
+format-prefix = "| "
+format-prefix-foreground = ${colors.text}
+format-padding = 0
+label = "   %title:0:30:...%"
+label-maxlen = 30
+
+
+
+[module/mail]
+type = custom/script
+# 600s = 10min
+# interval = 600
+# format = " <label> "
+# format-prefix = "// "
+tail = true
+format-prefix-foreground = ${colors.accent}
+exec = "~/.config/polybar/gmail/launch.py --prefix ' ' --color '#88C0D0' --nosound"
+click-left = xdg-open https://mail.google.com
+
+
+
+[module/app]
+type = custom/text
+content = "\Uf6e2" 
+content-floreground = ${xrdb:color7}
+content-background = ${colors.accent}
+content-padding = 3
+click-left = rofi -modi run,drun -show drun -location 1 -xoffset 15 -yoffset 39 -line-padding 4 -columns 1 -width 25 -lines 10 -padding 15 -hide-scrollbar -show-icons -drun-icon-theme
+# click-left = "jgmenu_run >/dev/null 2>&1 &"
+click-right = ~/.bin/rofi-favapp
+# click-right = mylaunchpad xfce-applications
+
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+label = %percentage%%
+
+
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+label = %percentage_used%%
+
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+
+label = %temperature%
+label-warn = %temperature%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${colors.accent}
+
+
+
+[module/alsa]
+type = internal/alsa
+format-volume = <ramp-volume> <label-volume>
+format-muted =  0%
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-foreground = ${colors.accent}
+
+
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+label = %layout%
+
+
+
+[module/network]
+type = internal/network
+interface = enp2s5
+interval = 1.0
+
+# format-connected = "<ramp-signal> <label-connected>"
+format-connected = "  <label-connected> "
+format-packetloss = <animation-packetloss>
+label-connected =  %upspeed:2% %downspeed:2%
+# label-connected = %signal%%
+
+ramp-signal-0 = 😱
+ramp-signal-1 = 😠
+ramp-signal-2 = 😒
+ramp-signal-3 = 😊
+ramp-signal-4 = 😃
+ramp-signal-5 = 😈
+
+animation-packetloss-0 = ⚠
+animation-packetloss-0-foreground = #ffa64c
+animation-packetloss-1 = 
+animation-packetloss-1-foreground = #000000
+
+
+
+[module/mpd]
+type = internal/mpd
+host = 127.0.0.1
+port = 6600
+# password = mysecretpassword
+interval = 2
+format-online = <icon-prev> <icon-stop> <toggle> <icon-next>
+label-offline =  mpd off
+icon-play = 
+icon-pause = 
+icon-stop = 
+icon-prev = 
+icon-next = 
+icon-play-foreground = ${colors.accent}
+icon-pause-foreground = ${colors.accent}
+icon-stop-foreground = ${colors.accent}
+icon-prev-foreground = ${colors.accent}
+icon-next-foreground = ${colors.accent}
+
+
+
+[module/ewmh]
+type = internal/xworkspaces
+pin-workspaces = true
+enable-click = true
+enable-scroll = true
+# icon-default = ♟
+format = <label-state>
+# format-padding = 5
+label-monitor = %name%
+# tokens: %index% %icon% %name%
+label-active = %name%
+label-active-padding = 4
+label-active-foreground = ${xrdb:color7}
+label-active-background = ${colors.accent}
+
+label-occupied = %name%
+label-occupied-foreground = ${colors.accent}
+# label-occupied-background = ${colors.magenta}
+label-occupied-padding = 4
+
+label-urgent = %name%
+label-urgent-padding = 4
+label-urgent-foreground = ${xrdb:color5}
+# label-urgent-background = #bd2c40
+
+label-empty = %name%
+label-empty-padding = 4
+label-empty-foreground = ${colors.text}
+# label-empty-background = ${colors.background}
+
+
+
+[module/date]
+type = internal/date
+interval = 1
+# date = "%e %b,"
+date-alt = "%e %B %Y,"
+time = "%H:%M"
+time-alt = "%H:%M:%S"
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+# format-underline = #5294E2
+label =%{A3:gsimplecal & disown:}%date% %time%%{A} %{A}
+# label = %date% %time%
+# format-background = #132332
+label-foreground = ${colors.text}
+# format-padding =
+
+
+[module/power]
+type = custom/text
+content = 
+content-foreground = ${xrdb:color7}
+content-background = ${colors.accent}
+content-padding = 3
+click-left = ~/.bin/xfce-logout
