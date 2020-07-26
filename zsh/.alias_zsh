@@ -1,11 +1,5 @@
 #!/usr/bin/bash
 
-# cat molot-tora.mp4 eraz.zip > data.mp4
-# unzip date.mp4
-
-# git.io custom url
-# curl -i https://git.io -F "url=https://github.com/creio" -F "code=YOUR_CUSTOM_NAME"
-
 alias sz="source $HOME/.zshrc"
 alias ez="$EDITOR $HOME/.zshrc"
 alias ea="$EDITOR $HOME/.alias_zsh"
@@ -89,16 +83,6 @@ alias neo="neofetch --w3m ~/.config/neofetch/cn.jpg"
 # alias neo="neofetch --kitty ~/.config/neofetch/cn.jpg"
 # alias neo="neofetch --w3m"
 
-# alias wtr="curl 'wttr.in/Москва?M&lang=ru'"
-# alias wtr="curl 'wttr.in/Москва?M&lang=ru' | sed -n '1,17p'"
-# alias wtr="curl 'wttr.in/?M1npQ&lang=ru'"
-wtr () {
-  # curl "wttr.in/?M$1npQ&lang=ru"
-  curl "wttr.in/Gomel?M$1npQ&lang=ru"
-}
-wts () {
-  curl "wttr.in/$1?M&lang=ru"
-}
 alias moon="curl 'wttr.in/Moon'"
 
 alias srm="sudo rm -rf"
@@ -172,23 +156,18 @@ ytv () {
   straw-viewer "$1"
 }
 
-# youtube-dl --ignore-errors -o '~/Видео/youtube/%(playlist)s/%(title)s.%(ext)s' https://www.youtube.com/playlist?list=PL-UzghgfytJQV-JCEtyuttutudMk7
-# Загрузка Видео ~/Videos или ~/Видео
-# Пример: dlv https://www.youtube.com/watch?v=gBAfejjUQoA
 dlv () {
   youtube-dl --ignore-errors -o '~/Videos/youtube/%(title)s.%(ext)s' "$1"
 }
-# dlp https://www.youtube.com/playlist?list=PL-UzghgfytJQV-JCEtyuttutudMk7
+
 dlp () {
   youtube-dl --ignore-errors -o '~/Videos/youtube/%(playlist)s/%(title)s.%(ext)s' "$1"
 }
 
-# Загрузка аудио ~/Music или ~/Музыка
-# Пример: mp3 https://www.youtube.com/watch?v=gBAfejjUQoA
 mp3 () {
   youtube-dl --ignore-errors -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o '~/Music/youtube/%(title)s.%(ext)s' "$1"
 }
-# mp3p https://www.youtube.com/watch?v=-F7A24f6gNc&list=RD-F7A24f6gNc
+
 mp3p () {
   youtube-dl --ignore-errors -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o '~/Music/youtube/%(playlist)s/%(title)s.%(ext)s' "$1"
 }
@@ -207,7 +186,6 @@ wgetw () {
 iso () {
   sudo dd bs=4M if="$1" of=/dev/"$2" status=progress && sync
 }
-
 
 alias -s {mp3,m4a,flac}="mpv"
 alias -s {png,jpg,tiff,bmp}="viewnior"
@@ -236,23 +214,6 @@ alias sna="sudo nautilus &"
 alias h="htop"
 alias {v,vi,vim}="nvim"
 
-# LANG=C pacman -Sl | awk '/\[installed\]$/ {print $2}' > ~/.pkglist.txt
-# LANG=C pacman -Sl | awk '/\[installed\]$/ {print $1 "/" $2 "-" $3}' > ~/.pkglist.txt
-alias pkglist="pacman -Qneq > ~/.pkglist.txt"
-alias aurlist="pacman -Qmeq > ~/.aurlist.txt"
-
-alias packey="sudo pacman-key --init && sudo pacman-key --populate archlinux && sudo pacman-key --refresh-keys && sudo pacman -Syy"
-alias sp="sudo pacman -S"
-alias spo="sudo pacman -S --overwrite='*'"
-alias spU="sudo pacman -U"
-alias spoU="sudo pacman -U --overwrite='*'"
-alias sps="sudo pacman -Ss"
-alias spc="sudo pacman -Sc"
-alias spcc="sudo pacman -Scc"
-alias spy="sudo pacman -Syy"
-alias spu="sudo pacman -Syu"
-alias spr="sudo pacman -R"
-
 # systemd
 alias sse="sudo systemctl enable"
 alias ssd="sudo systemctl disable"
@@ -267,55 +228,3 @@ alias ve="virtualenv ve"
 alias vea="source ve/bin/activate"
 alias ved="deactivate"
 alias pipr="pip install -r requirements.txt"
-
-# распаковать архив не указывая тип распаковщика
-function ex {
- if [ -z "$1" ]; then
-    # display usage if no parameters given
-    echo "Использование: ex <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
- else
-    if [ -f "$1" ] ; then
-        NAME=${1%.*}
-        #mkdir $NAME && cd $NAME
-        case "$1" in
-          *.tar.bz2)   tar xvjf ./"$1"    ;;
-          *.tar.gz)    tar xvzf ./"$1"    ;;
-          *.tar.xz)    tar xvJf ./"$1"    ;;
-          *.lzma)      unlzma ./"$1"      ;;
-          *.bz2)       bunzip2 ./"$1"     ;;
-          *.rar)       unrar x -ad ./"$1" ;;
-          *.gz)        gunzip ./"$1"      ;;
-          *.tar)       tar xvf ./"$1"     ;;
-          *.tbz2)      tar xvjf ./"$1"    ;;
-          *.tgz)       tar xvzf ./"$1"    ;;
-          *.zip)       unzip ./"$1"       ;;
-          *.Z)         uncompress ./"$1"  ;;
-          *.7z)        7z x ./"$1"        ;;
-          *.xz)        unxz ./"$1"        ;;
-          *.exe)       cabextract ./"$1"  ;;
-          *)           echo "ex: '$1' - Не может быть распакован" ;;
-        esac
-    else
-        echo "'$1' - не является допустимым файлом"
-    fi
-fi
-}
-
-# Упаковка в архив командой pk 7z /что/мы/пакуем имя_файла.7z
-function pk () {
-  if [ $1 ] ; then
-    case $1 in
-      tbz)       tar cjvf $2.tar.bz2 $2      ;;
-      tgz)       tar czvf $2.tar.gz  $2       ;;
-      txz)       tar -caf $2.tar.xz  $2       ;;
-      tar)       tar cpvf $2.tar  $2       ;;
-      bz2)       bzip $2 ;;
-      gz)        gzip -c -9 -n $2 > $2.gz ;;
-      zip)       zip -r $2.zip $2   ;;
-      7z)        7z a $2.7z $2    ;;
-      *)         echo "'$1' не может быть упакован с помощью pk()" ;;
-    esac
-  else
-    echo "'$1' не является допустимым файлом"
-  fi
-}
