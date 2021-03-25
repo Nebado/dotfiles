@@ -1,332 +1,122 @@
-;;; Appearance
-(defun get-default-font ()
-  (cond
-   ((eq system-type 'windows-nt) "Consolas-13")
-   ((eq system-type 'gnu/linux) "Ubuntu Mono-12")))
+;; Do not use `init.el` for `custom-*` code - use `custom-file.el`.
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load-file custom-file)
 
-(add-to-list 'default-frame-alist `(font . ,(get-default-font)))
-
-(when (display-graphic-p)
-  (set-face-attribute 'fixed-pitch nil :font (get-default-font)))
-
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
-(column-number-mode 1)
-(show-paren-mode 1)
-
-;; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-
+;; Require and initialize `package`.
+(require 'package)
 (package-initialize)
 
-;; Remove security vulnerability
-(eval-after-load "enriched"
-  '(defun enriched-decode-display-prop (start end &optional param)
-     (list start end)))
+;; Add `melpa` to `package-archives`.
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 
-;; No splash screen please ... jeez
-(setq inhibit-startup-message t)
+;; Provide instant autocompletion.
+(setq company-idle-delay 0.0)
 
-;; Set path to dependencies
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
+;; Disable useless startup messages.
+(setq inhibit-startup-message t
+      inhibit-splash-screen t
+      inhibit-startup-screen t)
 
-(setq settings-dir
-      (expand-file-name "settings" user-emacs-directory))
+;;; Make startup faster
+(setq package-enable-at-startup nil
+      file-name-handler-alist nil
+      message-log-max 16384
+      gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      auto-window-vscroll nil
+      package--init-file-ensured t)
 
-;; Set up load path
-(add-to-list 'load-path settings-dir)
-(add-to-list 'load-path site-lisp-dir)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Keep emacs Custom-settings in separate file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
+;; Disable useless GUI elements.
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tooltip-mode -1)
 
-;; Set up appearance early
-(require 'appearance)
+;; Load theme.
+(use-package gruvbox-theme
+:ensure t
+:config
+(load-theme 'gruvbox-dark-hard t))
 
-;; Settings for currently logged in user
-(setq user-settings-dir
-      (concat user-emacs-directory "users/" user-login-name))
-(add-to-list 'load-path user-settings-dir)
+;; Configure fonts.
+(defun set-font (family)
+  "Sets frame font to font-name."
+  (interactive "sFont name: ")
+  (add-to-list 'default-frame-alist `(font . ,family))
+  (set-face-attribute 'default nil :font family)
+  (set-face-attribute 'default t :font family)
+  (set-face-attribute 'fixed-pitch nil :font family))
+(set-font "Ubuntu Mono:size=16")
 
-;; Add external projects to load path
-(dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)
-    (add-to-list 'load-path project)))
+(ido-mode t)
+(column-number-mode t)
 
-;; Write backup files to own directory
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups")))))
+(setq ring-bell-function 'ignore
+      frame-resize-pixelwise t)
 
-;; Write all autosave files in the tmp dir
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+(setq create-lockfiles nil
+      make-backup-files nil)
 
-;; Don't write lock-files, I'm the only one here
-(setq create-lockfiles nil)
+(defvar s/indent-offset 2)
 
-;; Make backups of files, even when they're in version control
-(setq vc-make-backup-files t)
+;; Make the indentation sane.
+(setq default-tab-width s/indent-offset
+      tab-width s/indent-offset
+      standard-indent s/indent-offset)
 
-;; Save point position between sessions
-(require 'saveplace)
-(setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+(setq-default indent-tabs-mode nil)
 
-;; Are we on a mac?
-(setq is-mac (equal system-type 'darwin))
+;; Git integration for Emacs
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
 
-;; Setup packages
-(require 'setup-package)
+;; Compilation window
+(setq split-height-threshold 0)
+(setq compilation-window-height 10)
+(defun my-compilation-hook ()
+  (when (not (get-buffer-window "*compilation*"))
+    (save-selected-window
+      (save-excursion
+        (let* ((w (split-window-vertically))
+               (h (window-height w)))
+          (select-window w)
+          (switch-to-buffer "*compilation*")
+          (shrink-window (- h compilation-window-height)))))))
+(add-hook 'compilation-mode-hook 'my-compilation-hook)
 
-;; Install extensions if they're missing
-(defun init--install-packages ()
-  (packages-install
-   '(
-     cider
-     clojure-mode
-     clojure-mode-extra-font-locking
-     css-eldoc
-     diff-hl
-     deadgrep
-     dockerfile-mode
-     edn
-     elisp-slime-nav
-     f
-     fill-column-indicator
-     flx
-     flx-ido
-     flycheck
-     flycheck-pos-tip
-     forge
-     gist
-     groovy-mode
-;;     guide-key
-     highlight-escape-sequences
-     htmlize
-     hydra
-     ido-at-point
-     ido-completing-read+
-     ido-vertical-mode
-     inflections
-     kaocha-runner
-     magit
-     markdown-mode
-     move-text
-     nodejs-repl
-     paredit
-     perspective
-     prodigy
-     projectile
-     request
-     restclient
-     ripgrep
-     simple-httpd
-     smartparens
-     string-edit
-     visual-regexp
-     wgrep
-     whitespace-cleanup-mode
-     yasnippet
-     zprint-mode
-     )))
-
-
-
-;; Lets start with a smattering of sanity
-(require 'sane-defaults)
-
-;; Setup environment variables from the user's shell.
-(when is-mac
-  (require-package 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
-
-;;;; guide-key
-;;(require 'guide-key)
-;;(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-x v" "C-x 8" "C-x +"))
-;;(guide-key-mode 1)
-;;(setq guide-key/recursive-key-sequence-flag t)
-;;(setq guide-key/popup-window-position 'bottom)
-
-;; Setup extensions
-(eval-after-load 'ido '(require 'setup-ido))
-(eval-after-load 'org '(require 'setup-org))
-(eval-after-load 'dired '(require 'setup-dired))
-(eval-after-load 'magit '(require 'setup-magit))
-(eval-after-load 'shell '(require 'setup-shell))
-(require 'setup-rgrep)
-(require 'setup-hippie)
-(require 'setup-yasnippet)
-(require 'setup-perspective)
-(require 'setup-ffip)
-(require 'setup-html-mode)
-;;(require 'setup-web-mode)
-(require 'setup-paredit)
-
-(require 'prodigy)
-(global-set-key (kbd "C-x M-m") 'prodigy)
-
-;; Font lock dash.el
-(eval-after-load "dash" '(dash-enable-font-lock))
-
-;; Default setup of smartparens
-(require 'smartparens-config)
-(setq sp-autoescape-string-quote nil)
-(--each '(css-mode-hook
-          restclient-mode-hook
-          js-mode-hook
-          java-mode
-          ruby-mode
-          markdown-mode
-          groovy-mode
-          scala-mode)
-  (add-hook it 'turn-on-smartparens-mode))
-
-;; Language specific setup files
-(eval-after-load 'js2-mode '(require 'setup-js2-mode))
-(eval-after-load 'ruby-mode '(require 'setup-ruby-mode))
-(eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
-(eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
-
-;; Load stuff on demand
-(autoload 'skewer-start "setup-skewer" nil t)
-(autoload 'skewer-demo "setup-skewer" nil t)
-(autoload 'auto-complete-mode "auto-complete" nil t)
-
-;; Map files to modes
-(require 'mode-mappings)
-
-;; Highlight escape sequences
-(require 'highlight-escape-sequences)
-(hes-mode)
-(put 'font-lock-regexp-grouping-backslash 'face-alias 'font-lock-builtin-face)
-
-;; Visual regexp
-(require 'visual-regexp)
-(define-key global-map (kbd "M-&") 'vr/query-replace)
-(define-key global-map (kbd "M-/") 'vr/replace)
-
-;; Functions (load all files in defuns-dir)
-(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
-
-(require 'expand-region)
-(require 'multiple-cursors)
-(require 'delsel)
-(require 'jump-char)
-(require 'eproject)
-(require 'smart-forward)
-(require 'change-inner)
-(require 'multifiles)
-
-;; Don't use expand-region fast keys
-(setq expand-region-fast-keys-enabled nil)
-
-;; Show expand-region command used
-(setq er--show-expansion-message t)
-
-;; Fill column indicator
-(require 'fill-column-indicator)
-(setq fci-rule-color "#111122")
-
-;; Browse kill ring
-(require 'browse-kill-ring)
-(setq browse-kill-ring-quit-action 'save-and-restore)
-
-;; Smart M-x is smart
-(require 'smex)
-(smex-initialize)
-
-;; Setup key bindings
-(require 'key-bindings)
-
-;; Misc
-(require 'project-archetypes)
-(require 'my-misc)
-(when is-mac (require 'mac))
-
-;; Elisp go-to-definition with M-. and back again with M-,
-(autoload 'elisp-slime-nav-mode "elisp-slime-nav")
-(add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t) (eldoc-mode 1)))
-
-;; Emacs server
-(require 'server)
-(unless (server-running-p)
-  (server-start))
-
-;; Run at full power please
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-
-;; Conclude init by setting up specifics for the current user
-(when (file-exists-p user-settings-dir)
-  (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
-
-;; Mark-Multiple
-(require 'inline-string-rectangle)
-(global-set-key (kbd "C-x r t") 'inline-string-rectangle)
-
-(require 'mark-more-like-this)
-(global-set-key (kbd "C-<") 'mark-previous-like-this)
-(global-set-key (kbd "C->") 'mark-next-like-this)
-(global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
-(global-set-key (kbd "C-*") 'mark-all-like-this)
-
-(add-hook 'sgml-mode-hook
-          (lambda ()
-            (require 'rename-sgml-tag)
-            (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)))
-
-;; Move Text
-(require 'move-text)
-(global-set-key (kbd "M-p") 'move-text-up)
-(global-set-key (kbd "M-n") 'move-text-down)
-
-;; Duplicate Line
-(defun duplicate-line ()
-  "Duplicate current line"
-  (interactive)
-  (move-beginning-of-line 1)
-  (kill-line)
-  (yank)
-  (newline)
-  (yank))
-
-(global-set-key (kbd "C-,") 'duplicate-line)
-
-;; PHP
-(autoload 'php-mode "php-mode")
-(setq php-file-patterns nil)
-(add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl.php$" . html-mode))
-(eval-after-load "php-mode"
-  '(define-key php-mode-map (kbd "C-.") nil))
-
-
-;; Dired Size
-(defun dired-get-size ()
-  (interactive)
-  (let ((files (dired-get-marked-files)))
-    (with-temp-buffer
-      (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
-      (message "Size of all marked files: %s"
-               (progn
-                 (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
-                 (match-string 1))))))
-
-(define-key dired-mode-map (kbd "?") 'dired-get-size)
-
+;; Dired
+(require 'dired-x)
+(setq dired-omit-files
+      (concat dired-omit-files "\\|^\\..+$"))
+(setq-default dired-dwim-target t)
 (setq dired-listing-switches "-alh")
 
+;; Configure hooks.
+(add-hook
+ 'c-mode-hook
+ (lambda ()
+   (c-set-offset 'arglist-cont-nonempty '+)))
 
-;; Reveal.js
-(require 'ox-reveal)
-(setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+;; Make working with tabs a little bit easier.
+(global-set-key (kbd "C-x t <right>") 'tab-bar-switch-to-next-tab)
+(global-set-key (kbd "C-x t <left>") 'tab-bar-switch-to-prev-tab)
+
+;; Disable C-x C-b that opens useless Buffer Mode window. Use IBuffer instead.
+(global-unset-key (kbd "C-x C-b"))
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+;; Disable C-x C-d.
+(global-unset-key (kbd "C-x C-d"))
+(global-set-key (kbd "C-x C-d") 'dired)
+
+;; For insanely fast cycling through recent buffers.
+(global-set-key (kbd "M-[") 'previous-buffer)
+(global-set-key (kbd "M-]") 'next-buffer)
+
+;; Smex
+(global-set-key (kbd "M-x") 'smex)
+
