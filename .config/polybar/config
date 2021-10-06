@@ -1,0 +1,175 @@
+[colors]
+background = ${xrdb:background}
+foreground = #ffffff
+accent = #798BC7
+text = #9baec8
+light = #d5d6d7
+suffix = #ff0404
+
+[settings]
+screenchange-reload = true
+# pseudo-transparency = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+# //////////////////////////////////////
+[bar/top]
+width = 100%
+height = 22
+offset-x = 0
+offset-y = 0
+radius = 0
+fixed-center = true
+bottom = false
+
+background = ${colors.background}
+foreground = ${colors.text}
+
+line-size = 1
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 5
+module-margin-right = 0
+
+# font-0 = "UW Ttyp0:style=Regular:size=8:antialias=false;2"
+font-0 = "Ubuntu:style=Bold:size=8:antialias=false;2"
+#font-2 = "Siji:pixelsize=8;1"
+# Cat unicode: echo -e "\uF31A"
+font-1 = "Font Awesome 5 Free:style=Regular:pixelsize=8;2"
+font-2 = "Font Awesome 5 Free:style=Solid:pixelsize=8;2"
+font-3 = "Font Awesome 5 Brands:pixelsize=8;2"
+font-4 = "Hack Nerd Font Mono:size=12:antialias=false;2"
+font-5 = "Weather Icons:style=Regular:pixelsize=9;2"
+
+modules-left = i3
+modules-center = xwindow mpd
+modules-right = usd wtr cpu alsa date xkeyboard power
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+# wm-restack = bspwm
+override-redirect = false
+enable-ipc = true
+# "polybar-msg cmd toggle" hide/show bar
+# dock = true
+
+# tray-position = right
+# tray-padding = 3
+# tray-transparent = true
+# tray-background = #00000000
+# tray-detached = false
+# tray-maxsize = 16
+# tray-scale = 1.0
+# tray-offset-x = 100
+
+# ##########################################
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+label = %percentage%%
+
+[module/date]
+type = internal/date
+interval = 1
+# date = "%e %b,"
+date-alt = "%e %B %Y,"
+time = "%H:%M"
+time-alt = "%H:%M:%S"
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+# format-underline = #5294E2
+label =%{A3:gsimplecal & disown:}%date% %time%%{A}
+# label = %date% %time%
+# format-background = #132332
+label-foreground = ${colors.text}
+format-padding = 0
+
+[module/wtr]
+type = custom/script
+exec = ~/.config/polybar/wtr.sh
+format-foreground = ${colors.text}
+# format-padding = 1
+interval = 1800
+# label-font = 5
+# click-left =
+
+[module/alsa]
+type = internal/alsa
+format-volume = <ramp-volume> <label-volume>
+format-muted =  0%
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-foreground = ${colors.accent}
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+#blacklist-0 = caps lock
+format-prefix = " "
+format-prefix-foreground = ${colors.accent}
+label = %layout%
+format-padding = 0
+
+[module/usd]
+type = custom/script
+exec = ~/.config/polybar/scripts/btc usd,eur,btc uah
+interval = 6
+
+[module/power]
+type = custom/text
+content = 
+content-foreground = ${colors.accent}
+content-background = ${xrdb:color0}
+content-padding = 3
+click-left = "~/.bin/power &"
+
+[module/mpd]
+type = internal/mpd
+interval = 2
+format-online = <label-song>    <icon-prev>   <toggle>   <icon-next>
+format-online-padding = 0
+label-song =  "%artist% - %title%"
+label-song-maxlen = 25
+label-song-ellipsis = true
+label-offline = " mpd off"
+label-song-foreground = ${colors.text}
+
+icon-play = 
+icon-pause = 
+icon-stop = 
+icon-prev = 
+icon-next = 
+icon-seekb =
+icon-seekf =
+icon-random =
+icon-repeat =
+icon-repeatone =
+icon-single =
+icon-consume =
+icon-play-foreground = ${colors.accent}
+icon-pause-foreground = ${colors.accent}
+icon-stop-foreground = ${colors.accent}
+icon-prev-foreground = ${colors.accent}
+icon-next-foreground = ${colors.accent}
