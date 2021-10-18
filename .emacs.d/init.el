@@ -158,7 +158,10 @@
 (use-package web-mode
   :custom
   (web-mode-markup-indent-offset 4)
-  (web-mode-css-indent-offset 4)
+  (web-mode-php-indent-offset 4)
+  (web-mode-html-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-js-indent-offset 2)
   (web-mode-code-indent-offset 4))
 
 ;; Whitespace mode
@@ -251,9 +254,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(display-line-numbers-type (quote relative))
+ '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(yasnippet xml-format xml+ web-mode use-package unfill smex naysayer-theme multiple-cursors move-text magit gruvbox-theme expand-region drupal-mode company)))
+   '(vue-mode counsel sudo-edit dockerfile-mode yasnippet xml-format xml+ web-mode use-package unfill smex naysayer-theme multiple-cursors move-text magit gruvbox-theme expand-region drupal-mode company)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
