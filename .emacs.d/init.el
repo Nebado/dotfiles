@@ -323,3 +323,11 @@ This command does the inverse of `fill-paragraph'."
 ;; A little hack which fixes a problem with meta key in fluxbox under VNC.
 (setq x-alt-keysym 'meta)
 (setq confirm-kill-emacs 'y-or-n-p)
+
+;; Terminal from dired mode
+(defun open-terminal-in-workdir ()
+  (interactive)
+  (call-process-shell-command
+   (concat "urxvt -cd " default-directory) nil 0))
+
+(global-set-key (kbd "C-c t") 'open-terminal-in-workdir)
