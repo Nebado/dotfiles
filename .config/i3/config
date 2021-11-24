@@ -1,12 +1,12 @@
 #
-#██╗██████╗      ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗ 
-#██║╚════██╗    ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝ 
+#██╗██████╗      ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗
+#██║╚════██╗    ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
 #██║ █████╔╝    ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
 #██║ ╚═══██╗    ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
 #██║██████╔╝    ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
-#╚═╝╚═════╝      ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ 
+#╚═╝╚═════╝      ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
 #
-# 
+#
 
 ##### Modifier Button
 set $mod Mod4
@@ -19,11 +19,11 @@ font pango:monospace 8
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec --no-startup-id xset dpms 500
 exec --no-startup-id dunstwal
-exec --no-startup-id mpd 
+#exec --no-startup-id mpd
 exec_always --no-startup-id "xset +fp $HOME/.config/fonts"
 #exec_always --no-startup-id "nitrogen --restore"
 exec_always --no-startup-id "feh --randomize --bg-scale --slideshow-delay 1 $HOME/Pictures/background"
-exec --no-startup-id picom 
+exec --no-startup-id picom
 exec_always "setxkbmap -option 'ctrl:nocaps'"
 exec_always --no-startup-id "xset r rate 300 50"
 exec_always imwheel
@@ -36,7 +36,9 @@ bindsym $mod1+shift+Delete exec betterlockscreen -l
 bindsym $mod1+l exec --no-startup-id "betterlockscreen -l"
 bindsym $mod1+d exec --no-startup-id "dmenu_run"
 bindsym $mod+$mod1+f exec --no-startup-id "rofi -show run"
-bindsym $mod+Return exec --no-startup-id "urxvt -name 'term-tiling'"
+#bindsym $mod+Return exec --no-startup-id "urxvt -name 'term-tiling'"
+#bindsym $mod+Return exec --no-startup-id "urxvt -e zsh"
+bindsym $mod+Return exec --no-startup-id "alacritty"
 #bindsym $mod+Return exec --no-startup-id "xfce4-terminal"
 #bindsym $mod1+t exec --no-startup-id "urxvt -name 'term-float'"
 #bindsym $mod1+h exec --no-startup-id "urxvt -e htop"
@@ -44,13 +46,14 @@ bindsym $mod1+r exec --no-startup-id "xfce4-terminal -e ranger"
 bindsym $mod1+a exec --no-startup-id "anki"
 bindsym $mod1+e exec --no-startup-id "emacs"
 bindsym $mod1+m exec --no-startup-id "urxvt -e ncmpcpp"
+bindsym $mod+$mod1+s exec --no-startup-id "flameshot gui"
 bindsym $mod+Ctrl+Up exec mpc volume +2
 bindsym $mod+Ctrl+Down exec mpc volume -2
 bindsym $mod+Ctrl+Left exec mpc prev
 bindsym $mod+Ctrl+Right exec mpc next
 bindsym $mod+Ctrl+d exec mpc del 0
 # change volume or toggle mute
-bindsym XF86AudioRaiseVolume exec amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+10 N3blocks 
+bindsym XF86AudioRaiseVolume exec amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+10 N3blocks
 bindsym XF86AudioLowerVolume exec amixer -q -D pulse sset Master 5%- && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioMute exec amixer -q -D pulse sset Master toggle && pkill -RTMIN+10 i3blocks
 
@@ -206,7 +209,7 @@ bindsym $mod+r mode "resize"
 ##### Specific window
 for_window [window_role="pop-up|bubble|task_dialog|Preferences"] floating enable
 for_window [window_type="dialog|menu"] floating enable
-for_window [window_role="browser|GtkFileChooserDialog"] resize set 800 600, move position center
+#for_window [window_role="browser|GtkFileChooserDialog"] resize set 800 600, move position center
 for_window [window_role="demo"] resize set 800 600, move position center
 for_window [title="(?i)anki"] resize set 800 600, move position center
 for_window [class="(?i)simplescreenrecorder"] floating enable, move position 5 30
@@ -269,27 +272,27 @@ for_window [class="feh"] floating enable
 #for_window [class="cool-retro-term"] resize set 600 740
 
 ##### Specific workspaces
-assign [class="Chromium"] $workspace1
-#assign [class="firefox"] $workspace1
-assign [class="Google-chrome"] $workspace1
-#assign [class="Firefox"] $workspace1
-#assign [class="qutebrowser"] $workspace1
-assign [class="Nautilus"] $workspace3
-assign [class="Pcmanfm"] $workspace3
-assign [class="Thunar"] $workspace3
-assign [class="Thunderbird"] $workspace7
-assign [class="Spotify"] $workspace10
-for_window [class="Spotify"] move to workspace $workspace10 
-assign [class="Rhythmbox"] $workspace4
-assign [class="Audacious"] $workspace4
-assign [class="Gnome-mplayer"] $workspace5
-assign [class="Vlc"] $workspace5
-assign [class="Totem"] $workspace5
-#assign [class="MPlayer"] $workspace5
-#assign [class="mpv"] $workspace5
-assign [class="Gimp"] $workspace8
-assign [class="Photoshop.exe"] $workspace8
-assign [class="Gthumb"] $workspace8
+#assign [class="Chromium"] $ws1
+#assign [class="firefox"] $ws1
+#assign [class="Google-chrome"] $ws2
+#assign [class="Firefox"] $ws1
+assign [class="qutebrowser"] $ws1
+assign [class="Nautilus"] $ws3
+assign [class="Pcmanfm"] $ws3
+assign [class="Thunar"] $ws3
+assign [class="Thunderbird"] $ws7
+assign [class="Spotify"] $ws10
+for_window [class="Spotify"] move to workspace $ws10
+assign [class="Rhythmbox"] $ws4
+assign [class="Audacious"] $ws4
+assign [class="Gnome-mplayer"] $ws5
+assign [class="Vlc"] $ws5
+assign [class="Totem"] $ws5
+assign [class="MPlayer"] $ws5
+assign [class="mpv"] $ws5
+assign [class="Gimp"] $ws8
+assign [class="Photoshop.exe"] $ws8
+assign [class="Gthumb"] $ws8
 
 ##### I3 gaps
 for_window [class="^.*"] border pixel 1
