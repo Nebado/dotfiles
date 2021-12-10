@@ -2,7 +2,7 @@
 
 Just config files for some programs that I actively use.
 
-# Requirements #
+# Requirements
 
 - [i3-gaps](https://github.com/Airblader/i3) (window manager)
 - [Polybar](https://github.com/polybar/polybar) (status bar)
@@ -21,6 +21,6 @@ Just config files for some programs that I actively use.
 - Any Linux distribution (Arch or Debian)
 - Internet
 
-TBD
+# TBD
 
-- Deployment system
+- Deployment system (like deploy.sh for autoinstall)
