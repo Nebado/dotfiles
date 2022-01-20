@@ -331,3 +331,7 @@ This command does the inverse of `fill-paragraph'."
    (concat "urxvt -cd " default-directory) nil 0))
 
 (global-set-key (kbd "C-c t") 'open-terminal-in-workdir)
+
+;; Awesome fzf tool
+(global-set-key (kbd "C-M-f") 'fzf)
+(global-set-key (kbd "C-M-g") 'fzf-grep)
