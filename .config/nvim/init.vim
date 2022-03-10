@@ -1,6 +1,7 @@
 " Fundamentals
 " ----------------------------------
 set exrc
+set mouse=a
 set guicursor=
 set relativenumber
 set nu
@@ -25,11 +26,13 @@ set completeopt=menuone,noinsert,noselect
 set colorcolumn=80
 set signcolumn=yes
 set updatetime=50
+set shell=/bin/bash
 
 " Imports
 " ----------------------------------
 runtime ./plug.vim
 runtime ./maps.vim
+runtime ./jsenv.vim
 
 " Theme
 " ----------------------------------
@@ -38,13 +41,21 @@ highlight Normal guibg=none
 
 " Commands
 " ----------------------------------
-fun! TrimWhitespace()
-    let l:save = winsaveview()
-    keeppatterns %s/\s\+$//e
-    call winrestview(l:save)
-endfun
-
-augroup WORKFLOW
-    autocmd!
-    autocmd BufWritePre * :call TrimWhitespace()
-augroup END
+"fun! TrimWhitespace()
+"    let l:save = winsaveview()
+"    keeppatterns %s/\s\+$//e
+"    call winrestview(l:save)
+"endfun
+"
+"augroup WORKFLOW
+"    autocmd!
+"    autocmd BufWritePre * :call TrimWhitespace()
+"augroup END
+"
+"" FORMATTERS
+"au FileType javascript setlocal formatprg=prettier
+"au FileType javascript.jsx setlocal formatprg=prettier
+"au FileType typescript setlocal formatprg=prettier\ --parser\ typescript
+"au FileType html setlocal formatprg=js-beautify\ --type\ html
+"au FileType scss setlocal formatprg=prettier\ --parser\ css
+"au FileType css setlocal formatprg=prettier\ --parser\ css
