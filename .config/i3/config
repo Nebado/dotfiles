@@ -12,7 +12,7 @@ set $mod Mod4
 set $mod1 Mod1
 
 ##### Autostart
-# exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec_always --no-startup-id "xset +fp $HOME/.config/fonts"
 exec_always --no-startup-id "feh --randomize --bg-scale --slideshow-delay 1 $HOME/Pictures/background"
 exec_always --no-startup-id "setxkbmap -option 'ctrl:nocaps'"
@@ -27,8 +27,8 @@ exec --no-startup-id "dunstwal"
 ##### Shortcuts
 bindsym $mod1+d exec --no-startup-id "dmenu_run"
 bindsym $mod+$mod1+f exec --no-startup-id "rofi -show run"
-bindsym $mod+Return exec --no-startup-id "alacritty"
-bindsym $mod1+r exec --no-startup-id "alacritty -e ranger"
+bindsym $mod+Return exec --no-startup-id "urxvt"
+bindsym $mod1+r exec --no-startup-id "urxvt -e ranger"
 bindsym $mod1+e exec --no-startup-id "emacs"
 bindsym $mod+$mod1+s exec --no-startup-id "flameshot gui"
 
@@ -164,11 +164,11 @@ gaps outer 8
 smart_gaps on
 smart_borders on
 
-bar {
-    status_command i3status
-    position bottom
-    output primary
-    tray_output none
-    #font pango:monospace 8
-    separator_symbol |
-}
+#bar {
+#    status_command i3status
+#    position bottom
+#    output primary
+#    tray_output none
+#    #font pango:monospace 8
+#    separator_symbol |
+#}
