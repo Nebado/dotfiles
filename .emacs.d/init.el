@@ -30,6 +30,8 @@
 (scroll-bar-mode -1)
 (tooltip-mode -1)
 
+(column-number-mode t)
+
 ;; Load theme.
 ;; (use-package gruvbox-theme
 ;; :ensure t
@@ -42,11 +44,20 @@
 (load-theme 'naysayer t))
 (set-face-attribute 'region nil :background "#666")
 
-;; set transparency
-(set-frame-parameter (selected-frame) 'alpha '(85 85))
-(add-to-list 'default-frame-alist '(alpha 85 85))
+;; Set transparency
+(set-frame-parameter (selected-frame) 'alpha '(100 100))
+(add-to-list 'default-frame-alist '(alpha 100 100))
 
-(column-number-mode t)
+(defconst frame-transparency 100)
+(defun toggle-transparency ()
+  (interactive)
+  (let ((frame-alpha (frame-parameter nil 'alpha)))
+    (if (or (not frame-alpha)
+            (= (cadr frame-alpha) 100))
+        (set-frame-parameter nil 'alpha
+                             `(,frame-transparency
+                               ,frame-transparency))
+      (set-frame-parameter nil 'alpha '(100 100)))))
 
 ;; Configure fonts.
 (defun set-font (family)
@@ -148,6 +159,8 @@
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
@@ -256,7 +269,7 @@
  ;; If there is more than one, they won't work right.
  '(display-line-numbers-type 'relative)
  '(package-selected-packages
-   '(vue-mode counsel sudo-edit dockerfile-mode yasnippet xml-format xml+ web-mode use-package unfill smex naysayer-theme multiple-cursors move-text magit gruvbox-theme expand-region drupal-mode company)))
+   '(rust-mode markdown-preview-mode fzf typescript-mode vue-mode counsel sudo-edit dockerfile-mode yasnippet xml-format xml+ web-mode use-package unfill smex naysayer-theme multiple-cursors move-text magit gruvbox-theme expand-region drupal-mode company)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -307,18 +320,6 @@ This command does the inverse of `fill-paragraph'."
     (fill-paragraph nil)))
 
 (global-set-key (kbd "C-c M-p") 'unfill-paragraph)
-
-;; Transparency
-(defconst frame-transparency 85)
-(defun toggle-transparency ()
-  (interactive)
-  (let ((frame-alpha (frame-parameter nil 'alpha)))
-    (if (or (not frame-alpha)
-            (= (cadr frame-alpha) 100))
-        (set-frame-parameter nil 'alpha
-                             `(,frame-transparency
-                               ,frame-transparency))
-      (set-frame-parameter nil 'alpha '(100 100)))))
 
 ;; A little hack which fixes a problem with meta key in fluxbox under VNC.
 (setq x-alt-keysym 'meta)
