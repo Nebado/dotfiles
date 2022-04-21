@@ -177,31 +177,6 @@
   (web-mode-js-indent-offset 2)
   (web-mode-code-indent-offset 4))
 
-;; Whitespace mode
-(defun set-up-whitespace-handling ()
-  (interactive)
-  (whitespace-mode 1)
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
-
-(add-hook 'web-mode 'set-up-whitespace-handling)
-(add-hook 'tuareg-mode-hook 'set-up-whitespace-handling)
-(add-hook 'c++-mode-hook 'set-up-whitespace-handling)
-(add-hook 'c-mode-hook 'set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'set-up-whitespace-handling)
-(add-hook 'java-mode-hook 'set-up-whitespace-handling)
-(add-hook 'lua-mode-hook 'set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'set-up-whitespace-handling)
-(add-hook 'scala-mode-hook 'set-up-whitespace-handling)
-(add-hook 'markdown-mode-hook 'set-up-whitespace-handling)
-(add-hook 'haskell-mode-hook 'set-up-whitespace-handling)
-(add-hook 'python-mode-hook 'set-up-whitespace-handling)
-(add-hook 'erlang-mode-hook 'set-up-whitespace-handling)
-(add-hook 'asm-mode-hook 'set-up-whitespace-handling)
-(add-hook 'nasm-mode-hook 'set-up-whitespace-handling)
-(add-hook 'go-mode-hook 'set-up-whitespace-handling)
-(add-hook 'nim-mode-hook 'set-up-whitespace-handling)
-(add-hook 'yaml-mode-hook 'set-up-whitespace-handling)
-
 ;; Company
 (use-package company)
 (global-company-mode)
