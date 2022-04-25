@@ -1,6 +1,6 @@
 # Dotfiles
 
-My config files for some programs.
+My config files for some applications.
 
 # Requirements
 
