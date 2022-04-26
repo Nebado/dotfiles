@@ -17,7 +17,7 @@ nnoremap <silent> gh :Lspsaga lsp_finder<CR>
 nnoremap <silent> gp :Lspsaga preview_definition<CR>
 
 " Telescope
-nnoremap  <silent> ;f <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap  <silent> ;f <cmd>lua require('telescope.builtin').find_files({hidden = true})<cr>
 nnoremap  <silent> ;r <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap  <silent> ;b <cmd>lua require('telescope.builtin').file_browser()<cr>
 nnoremap <silent> \\ <cmd>Telescope buffers<cr>
